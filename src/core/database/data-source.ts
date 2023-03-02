@@ -1,4 +1,7 @@
 import 'dotenv/config';
+import {
+  ApartmentEntity
+} from 'src/core/entities/index';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -8,8 +11,11 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
-  entities: [],
+  entities: [
+    ApartmentEntity
+  ],
   migrations: [],
+  migrationsRun: false,
   synchronize: false,
   migrationsTableName: 'migrations_history',
   logging: true
