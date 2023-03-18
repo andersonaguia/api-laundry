@@ -18,4 +18,7 @@ export class ResidentEntity extends BaseEntity {
     name: 'apartment_id',
   })
   apartment: ApartmentEntity;
+
+  @Column({ nullable: false, default: false })
+  isDeleted: string;
 }
