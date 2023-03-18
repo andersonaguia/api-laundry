@@ -1,7 +1,6 @@
 import 'dotenv/config';
-import {
-  ApartmentEntity
-} from 'src/core/entities/index';
+import { ApartmentEntity } from 'src/core/entities/index';
+import { ResidentEntity } from 'src/modules/residents/entities/resident.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -12,13 +11,17 @@ export const dataSourceOptions: DataSourceOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   entities: [
-    ApartmentEntity
+    __dirname + '/../../**/**/*.entity{.ts,.js}',
+    'dist/**/**/*.entity.js',
   ],
-  migrations: [],
+  migrations: [
+    __dirname + './migrations/*{.ts,.js}',
+    'dist/core/database/migrations/*{.ts,.js}',
+  ],
   migrationsRun: false,
   synchronize: false,
   migrationsTableName: 'migrations_history',
-  logging: true
+  logging: true,
 };
 
 const dataSource = new DataSource(dataSourceOptions);
