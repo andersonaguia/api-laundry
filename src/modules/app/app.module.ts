@@ -7,6 +7,7 @@ import configuration from 'src/common/env';
 import { join } from 'path';
 import { dataSourceOptions } from 'src/core/database/data-source';
 import { ApartmentsModule } from '../apartments/apartments.module';
+import { ResidentsModule } from '../residents/residents.module';
 
 @Module({
   imports: [
@@ -18,9 +19,10 @@ import { ApartmentsModule } from '../apartments/apartments.module';
       rootPath: join(__dirname, '..', '..', '..', 'public'),
     }),
     TypeOrmModule.forRoot({ autoLoadEntities: true, ...dataSourceOptions }),
-    ApartmentsModule
+    ApartmentsModule,
+    ResidentsModule,
   ],
   controllers: [AppController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
