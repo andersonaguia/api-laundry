@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { ApartmentRepository } from '../apartment.repository';
 import { CreateApartmentDto } from '../dto/create-apartment.dto';
 import { UpdateApartmentDto } from '../dto/update-apartment.dto';
@@ -13,15 +17,24 @@ export class ApartmentsService {
       apartment,
     );
     if (apartmentExists) {
-      throw new BadRequestException('Apartment already exists');
+      throw new ConflictException({
+        code: 409,
+        message: 'Apartment already exists',
+      });
     }
-    const apartmentSaved = await this.apartmentRepository.createApartment(
-      newApartment,
-    );
-    if (!apartmentSaved) {
-      throw new BadRequestException('Apartment was not saved');
+
+    try {
+      const apartmentSaved = await this.apartmentRepository.createApartment(
+        newApartment,
+      );
+
+      return apartmentSaved;
+    } catch (error) {
+      throw new BadRequestException({
+        code: error.code,
+        message: 'Apartment was not saved',
+      });
     }
-    return apartmentSaved;
   }
 
   findAll() {
