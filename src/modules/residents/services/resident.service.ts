@@ -22,13 +22,7 @@ export class ResidentService {
       try {
         const allResidents = await this.residentRepository.getAll();
         const residents = allResidents.map((resident) => {
-          delete resident.deletedAt;
-          delete resident.createdAt;
-          delete resident.updatedAt;
-          delete resident.apartment.deletedAt;
-          delete resident.apartment.createdAt;
-          delete resident.apartment.updatedAt;
-          return resident;
+          return this.formatResidentResponse(resident);
         });
         resolve(residents);
       } catch (error) {
@@ -62,14 +56,10 @@ export class ResidentService {
       const residentSaved = await this.residentRepository.createResident(
         dataResident,
       );
-      delete residentSaved.createdAt;
-      delete residentSaved.updatedAt;
-      delete residentSaved.deletedAt;
-      delete residentSaved.apartment.createdAt;
-      delete residentSaved.apartment.updatedAt;
-      delete residentSaved.apartment.deletedAt;
 
-      return residentSaved;
+      const formattedResident = this.formatResidentResponse(residentSaved);
+
+      return formattedResident;
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException({
@@ -125,5 +115,15 @@ export class ResidentService {
         reject(error);
       }
     });
+  }
+
+  formatResidentResponse(resident: ResidentEntity): ResidentEntity {
+    delete resident.createdAt;
+    delete resident.updatedAt;
+    delete resident.deletedAt;
+    delete resident.apartment.createdAt;
+    delete resident.apartment.updatedAt;
+    delete resident.apartment.deletedAt;
+    return resident;
   }
 }
