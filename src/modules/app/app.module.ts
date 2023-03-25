@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import configuration from 'src/common/env';
 import { join } from 'path';
 import { dataSourceOptions } from 'src/core/database/data-source';
 import { ApartmentsModule } from '../apartments/apartments.module';
 import { ResidentsModule } from '../residents/residents.module';
+import { AuthModule } from 'src/core/auth/auth.module';
 
 @Module({
   imports: [
@@ -21,8 +21,9 @@ import { ResidentsModule } from '../residents/residents.module';
     TypeOrmModule.forRoot({ autoLoadEntities: true, ...dataSourceOptions }),
     ApartmentsModule,
     ResidentsModule,
+    AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}
