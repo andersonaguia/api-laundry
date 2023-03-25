@@ -4,14 +4,11 @@ import { Column, Entity } from 'typeorm';
 @Entity({ name: 'command_machines' })
 export class MachineEntity extends BaseEntity {
   @Column()
-  group1: boolean;
+  machineGroup: number;
 
-  @Column()
-  group2: boolean;
+  @Column({ length: 50 })
+  description: string;
 
-  @Column()
-  group3: boolean;
-
-  @Column()
-  group4: boolean;
+  @Column({ default: false })
+  isOn: boolean;
 }
