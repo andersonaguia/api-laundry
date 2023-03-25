@@ -14,6 +14,16 @@ export class MachineRepository extends Repository<MachineEntity> {
     return await this.findOne({ where: { machineGroup } });
   }
 
+  async findAll(): Promise<MachineEntity[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve(await this.find({ where: { deletedAt: null } }));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   async createMachine(newMachine: CreateMachineDto): Promise<MachineEntity> {
     return new Promise(async (resolve, reject) => {
       try {

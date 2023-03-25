@@ -4,11 +4,16 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CreateMachineDto } from '../dto/create-machine.dto';
+import { MachineEntity } from '../entities/machine.entity';
 import { MachineRepository } from '../machine.repository';
 
 @Injectable()
 export class MachineService {
   constructor(private readonly machineRepository: MachineRepository) {}
+
+  async findAll(): Promise<MachineEntity[]> {
+    return await this.machineRepository.findAll();
+  }
 
   async create(newMachine: CreateMachineDto) {
     const { machineGroup } = newMachine;
