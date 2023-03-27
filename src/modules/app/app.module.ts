@@ -8,6 +8,7 @@ import { dataSourceOptions } from 'src/core/database/data-source';
 import { ApartmentsModule } from '../apartments/apartments.module';
 import { ResidentsModule } from '../residents/residents.module';
 import { AuthModule } from 'src/core/auth/auth.module';
+import { MachinesModule } from '../machines/machines.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from 'src/core/auth/auth.module';
     ApartmentsModule,
     ResidentsModule,
     AuthModule,
+    MachinesModule,
   ],
   controllers: [],
   providers: [],
