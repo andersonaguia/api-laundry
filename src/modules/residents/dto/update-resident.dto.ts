@@ -1,4 +1,18 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateResidentDto } from './create-resident.dto';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class UpdateResidentDto extends PartialType(CreateResidentDto) {}
+export class UpdateResidentDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(15)
+  phone: string;
+}

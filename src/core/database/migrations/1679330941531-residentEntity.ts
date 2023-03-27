@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class residentEntity1679145135173 implements MigrationInterface {
-    name = 'residentEntity1679145135173'
+export class residentEntity1679330941531 implements MigrationInterface {
+    name = 'residentEntity1679330941531'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`residents\` (\`id\` int NOT NULL AUTO_INCREMENT, \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`deletedAt\` datetime(6) NULL, \`name\` varchar(100) NOT NULL, \`email\` varchar(100) NOT NULL, \`phone\` varchar(12) NOT NULL, \`apartment_id\` int NULL, UNIQUE INDEX \`REL_cd6313a860ece9aafa0636a66a\` (\`apartment_id\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);

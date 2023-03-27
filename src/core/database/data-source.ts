@@ -1,6 +1,4 @@
 import 'dotenv/config';
-import { ApartmentEntity } from 'src/core/entities/index';
-import { ResidentEntity } from 'src/modules/residents/entities/resident.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const dataSourceOptions: DataSourceOptions = {

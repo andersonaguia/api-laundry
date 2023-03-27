@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { ApartmentEntity } from './entities/apartment.entity';
@@ -16,7 +12,6 @@ export class ApartmentRepository extends Repository<ApartmentEntity> {
 
   async getByApartment(apartment: number): Promise<ApartmentEntity> {
     const apt = await this.findOne({ where: { apartment } });
-
     return apt;
   }
 
