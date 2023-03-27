@@ -4,6 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CreateMachineDto } from '../dto/create-machine.dto';
+import { UpdateMachineDto } from '../dto/update-machine.dto';
 import { MachineEntity } from '../entities/machine.entity';
 import { MachineRepository } from '../machine.repository';
 
@@ -39,5 +40,9 @@ export class MachineService {
         message: 'Apartment was not saved',
       });
     }
+  }
+
+  async updateStatus(machineData: UpdateMachineDto) {
+    return await this.machineRepository.updateMachine(machineData);
   }
 }

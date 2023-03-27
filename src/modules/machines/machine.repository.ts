@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { MachineEntity } from './entities/machine.entity';
 import { CreateMachineDto } from './dto/create-machine.dto';
+import { UpdateMachineDto } from './dto/update-machine.dto';
 
 @Injectable()
 export class MachineRepository extends Repository<MachineEntity> {
@@ -34,6 +35,30 @@ export class MachineRepository extends Repository<MachineEntity> {
         };
         const machineSaved = await this.save(dataMachine);
         resolve(machineSaved);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async updateMachine(machineData: UpdateMachineDto): Promise<object> {
+    const { machineId, isOn } = machineData;
+
+    const dataToUpdate = {
+      isOn: isOn,
+      updatedAt: new Date(),
+    };
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { affected } = await this.update({ id: machineId }, dataToUpdate);
+        if (affected > 0) {
+          resolve({
+            statusCode: 200,
+            message: 'Data updated successfully',
+          });
+        }
+        throw new BadRequestException('Failed to update data');
       } catch (error) {
         reject(error);
       }
