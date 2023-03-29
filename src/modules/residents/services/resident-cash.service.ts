@@ -15,6 +15,22 @@ export class ResidentCashService {
     private readonly residentCashRepository: ResidentCashRepository,
   ) {}
 
+  async getAtualCashByApartment(
+    apartmentId: number,
+  ): Promise<ResidentCashEntity[]> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const atualCash =
+          await this.residentCashRepository.getAtualCashByApartment(
+            apartmentId,
+          );
+        resolve(atualCash);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   async changeCash(data: ChangeResidentCashDto, req: any) {
     const resident = await this.residentRepository.getById(data.residentId);
 
