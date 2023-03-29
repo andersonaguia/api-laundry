@@ -10,7 +10,7 @@ export class ResidentRepository extends Repository<ResidentEntity> {
   }
 
   async getById(id: number): Promise<ResidentEntity> {
-    return await this.findOne({ where: { id } });
+    return await this.findOne({ where: { id }, loadRelationIds: true });
   }
 
   async getAll(): Promise<ResidentEntity[]> {

@@ -11,8 +11,11 @@ export class ApartmentRepository extends Repository<ApartmentEntity> {
   }
 
   async getByApartment(apartment: number): Promise<ApartmentEntity> {
-    const apt = await this.findOne({ where: { apartment } });
-    return apt;
+    return await this.findOne({ where: { apartment } });
+  }
+
+  async getById(id: number): Promise<ApartmentEntity> {
+    return await this.findOne({ where: { id } });
   }
 
   async createApartment(
