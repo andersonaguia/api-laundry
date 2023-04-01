@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'src/common/env';
@@ -9,6 +8,8 @@ import { ApartmentsModule } from '../apartments/apartments.module';
 import { ResidentsModule } from '../residents/residents.module';
 import { AuthModule } from 'src/core/auth/auth.module';
 import { MachinesModule } from '../machines/machines.module';
+import { ConfigurationModule } from '../configuration/configuration.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MachinesModule } from '../machines/machines.module';
     ResidentsModule,
     AuthModule,
     MachinesModule,
+    ConfigurationModule,
   ],
   controllers: [],
   providers: [],
