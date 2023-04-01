@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ApartmentEntity } from 'src/core/entities';
 import { ApartmentRepository } from 'src/modules/apartments/apartment.repository';
 import { ChangeResidentCashDto } from '../dto/change-resident-cash.dto';
 import { ResidentCashEntity } from '../entities/resident-cash.entity';

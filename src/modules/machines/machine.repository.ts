@@ -11,6 +11,10 @@ export class MachineRepository extends Repository<MachineEntity> {
     super(MachineEntity, dataSource.createEntityManager());
   }
 
+  async getById(id: number): Promise<MachineEntity> {
+    return await this.findOne({ where: { id } });
+  }
+
   async getByMachineGroup(machineGroup: number): Promise<MachineEntity> {
     return await this.findOne({ where: { machineGroup } });
   }

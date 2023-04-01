@@ -38,7 +38,6 @@ export class AuthService {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.checkCredentials(credentials);
-        console.log(user);
         if (user === null) {
           resolve(null);
         }
