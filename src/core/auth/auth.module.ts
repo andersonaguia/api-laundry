@@ -11,7 +11,7 @@ import { UsersModule } from 'src/modules/users/users.module';
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {
-        expiresIn: 60 * 5 * 6,
+        expiresIn: '7d',
       },
     }),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
