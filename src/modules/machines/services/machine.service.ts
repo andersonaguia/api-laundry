@@ -3,17 +3,21 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { CreateMachineDto } from '../dto/create-machine.dto';
-import { UpdateMachineDto } from '../dto/update-machine.dto';
-import { UseMachineDto } from '../dto/use-machine.dto';
-import { MachineHistoryEntity } from '../entities/machine-history.entity';
-import { MachineEntity } from '../entities/machine.entity';
-import { MachineRepository } from '../machine.repository';
-import { ApartmentRepository } from 'src/modules/apartments/apartment.repository';
-import { MachineHistoryRepository } from '../machine-history.repository';
-import { ResidentRepository } from 'src/modules/residents/resident.repository';
-import { ResidentCashRepository } from 'src/modules/residents/resident-cash.repository';
+} from "@nestjs/common";
+import { CreateMachineDto } from "../dto/create-machine.dto";
+import { UpdateMachineDto } from "../dto/update-machine.dto";
+import { UseMachineDto } from "../dto/use-machine.dto";
+import { MachineHistoryEntity } from "../entities/machine-history.entity";
+import { MachineEntity } from "../entities/machine.entity";
+import { MachineRepository } from "../machine.repository";
+import { ApartmentRepository } from "src/modules/apartments/apartment.repository";
+import { MachineHistoryRepository } from "../machine-history.repository";
+import { ResidentRepository } from "src/modules/residents/resident.repository";
+import { ResidentCashRepository } from "src/modules/residents/resident-cash.repository";
+import { ConfigurationRepository } from "../../configuration/configuration.repository";
+import { MoreThan } from "typeorm";
+import { ResidentCashEntity } from "src/modules/residents/entities/resident-cash.entity";
+import { UserRepository } from 'src/modules/users/user.repository';
 
 @Injectable()
 export class MachineService {
@@ -23,6 +27,8 @@ export class MachineService {
     private readonly machineHistoryRepository: MachineHistoryRepository,
     private readonly residentRepository: ResidentRepository,
     private readonly residentCashRepository: ResidentCashRepository,
+    private readonly configurationRepository: ConfigurationRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async findAll(): Promise<MachineEntity[]> {
@@ -32,25 +38,25 @@ export class MachineService {
   async create(newMachine: CreateMachineDto) {
     const { machineGroup } = newMachine;
     const machineExists = await this.machineRepository.getByMachineGroup(
-      machineGroup,
+      machineGroup
     );
     if (machineExists) {
       throw new ConflictException({
         code: 409,
-        message: 'Machine group already exists',
+        message: "Machine group already exists",
       });
     }
 
     try {
       const machineSaved = await this.machineRepository.createMachine(
-        newMachine,
+        newMachine
       );
 
       return machineSaved;
     } catch (error) {
       throw new BadRequestException({
         code: error.code,
-        message: 'Apartment was not saved',
+        message: "Apartment was not saved",
       });
     }
   }
@@ -61,47 +67,68 @@ export class MachineService {
 
   async useMachine(
     newUse: UseMachineDto,
-    req: any,
+    req: any
   ): Promise<MachineHistoryEntity> {
-    const { isOn, machineId, residentId } = newUse;
+    const { isOn, machineId, apartmentId } = newUse;
     const userId = req.user.id;
-    console.log(userId);
 
     const machine = await this.machineRepository.getById(machineId);
 
     if (!machine) {
       throw new NotFoundException({
         code: 404,
-        message: 'Machine was not found',
+        message: "Machine was not found",
       });
     }
 
-    const resident = await this.residentRepository.getById(residentId);
+    const apartment = await this.apartmentRepository.getById(+apartmentId);
 
-    console.log('RESIDENT: ', resident);
-
-    if (!resident) {
+    if (!apartment) {
       throw new NotFoundException({
         code: 404,
-        message: 'Resident was not found',
+        message: "Apartment was not found",
       });
     }
 
-    const apartment = resident.apartment;
-    console.log('APARTMENT: ', apartment);
     const residentCash =
-      await this.residentCashRepository.getAtualCashByApartment(5);
+      await this.residentCashRepository.getAtualCashByApartment(+apartment.id);
 
-    console.log('SALDO ATUAL: ', residentCash);
+    const currentConfig = await this.configurationRepository.findOne({
+      where: {
+        id: MoreThan(0),
+      },
+      order: { createdAt: "DESC" },
+    });
+
+    if (!residentCash || +residentCash.cash < +currentConfig.price) {
+      throw new NotFoundException({
+        code: 403,
+        message: "No enough cash.",
+      });
+    }
+
+    const resident = await this.residentRepository.getByApartmentId(
+      +apartmentId
+    );
+
+    const systemUser = await this.userRepository.findUserByName('Application');
+
+    const newCash = new ResidentCashEntity();
+    newCash.user = systemUser;
+    newCash.apartment = apartment;
+    newCash.cash = +residentCash.cash - +currentConfig.price;
+    newCash.resident = resident;
+
+    const updatedCash = await this.residentCashRepository.changeCash(newCash);
 
     const useMachine = new MachineHistoryEntity();
-    useMachine.apartment = resident.apartment;
+    useMachine.apartment = apartment;
     useMachine.machine = machine;
     useMachine.isOn = isOn;
     useMachine.user = userId;
 
     const machineSaved = await this.machineHistoryRepository.useMachine(
-      useMachine,
+      useMachine
     );
 
     return machineSaved;

@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
-import { CredentialsDTO } from 'src/core/auth/dto/credentials.dto';
+import { Injectable } from "@nestjs/common";
+import { DataSource, Like, Repository } from "typeorm";
+import { InjectDataSource } from "@nestjs/typeorm";
+import { UserEntity } from "./entities/user.entity";
+import { CreateUserDto } from "./dto/create-user.dto";
+import * as bcrypt from "bcrypt";
+import { CredentialsDTO } from "src/core/auth/dto/credentials.dto";
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -16,6 +16,21 @@ export class UserRepository extends Repository<UserEntity> {
     const { email } = credentials;
     return await this.findOne({
       where: { email: email },
+    });
+  }
+
+  async findUserByName(username: string): Promise<UserEntity> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.findOne({
+          where: {
+            fullName: Like(`%${username}%`),
+          },
+        });
+        resolve(user);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 

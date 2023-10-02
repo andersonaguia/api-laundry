@@ -11,14 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResidentCashService = void 0;
 const common_1 = require("@nestjs/common");
-const apartment_repository_1 = require("../../apartments/apartment.repository");
 const resident_cash_entity_1 = require("../entities/resident-cash.entity");
 const resident_cash_repository_1 = require("../resident-cash.repository");
 const resident_repository_1 = require("../resident.repository");
 let ResidentCashService = class ResidentCashService {
-    constructor(residentRepository, apartmentRepository, residentCashRepository) {
+    constructor(residentRepository, residentCashRepository) {
         this.residentRepository = residentRepository;
-        this.apartmentRepository = apartmentRepository;
         this.residentCashRepository = residentCashRepository;
     }
     async getAtualCashByApartment(apartmentId) {
@@ -33,20 +31,28 @@ let ResidentCashService = class ResidentCashService {
         });
     }
     async changeCash(data, req) {
-        const resident = await this.residentRepository.getById(data.residentId);
-        if (!resident) {
-            throw new common_1.NotFoundException({
-                statusCode: 404,
-                message: 'Resident was not found',
-            });
-        }
-        const newCash = new resident_cash_entity_1.ResidentCashEntity();
-        newCash.user = req.user;
-        newCash.apartment = resident.apartment;
-        newCash.resident = resident;
-        newCash.cash = data.cash;
-        const residentCashUpdated = await this.residentCashRepository.changeCash(newCash);
-        return residentCashUpdated;
+        return new Promise(async (resolve, reject) => {
+            try {
+                const resident = await this.residentRepository.getById(+data.residentId);
+                if (!resident) {
+                    throw new common_1.NotFoundException({
+                        statusCode: 404,
+                        message: "Resident was not found",
+                    });
+                }
+                const atualCash = await this.residentCashRepository.getAtualCashByApartment(+data.apartmentId);
+                const newCash = new resident_cash_entity_1.ResidentCashEntity();
+                newCash.user = req.user;
+                newCash.apartment = resident.apartment;
+                newCash.resident = resident;
+                newCash.cash = (+data.cash) + (+atualCash.cash);
+                const residentCashUpdated = await this.residentCashRepository.changeCash(newCash);
+                resolve(residentCashUpdated);
+            }
+            catch (error) {
+                reject(error);
+            }
+        });
     }
     formatResidentResponse(resident) {
         delete resident.createdAt;
@@ -61,7 +67,6 @@ let ResidentCashService = class ResidentCashService {
 ResidentCashService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [resident_repository_1.ResidentRepository,
-        apartment_repository_1.ApartmentRepository,
         resident_cash_repository_1.ResidentCashRepository])
 ], ResidentCashService);
 exports.ResidentCashService = ResidentCashService;

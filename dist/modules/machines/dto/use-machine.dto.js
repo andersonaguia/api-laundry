@@ -26,6 +26,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], UseMachineDto.prototype, "residentId", void 0);
+], UseMachineDto.prototype, "apartmentId", void 0);
 exports.UseMachineDto = UseMachineDto;
 //# sourceMappingURL=use-machine.dto.js.map

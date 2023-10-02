@@ -1,27 +1,26 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ApartmentRepository } from 'src/modules/apartments/apartment.repository';
-import { ChangeResidentCashDto } from '../dto/change-resident-cash.dto';
-import { ResidentCashEntity } from '../entities/resident-cash.entity';
-import { ResidentEntity } from '../entities/resident.entity';
-import { ResidentCashRepository } from '../resident-cash.repository';
-import { ResidentRepository } from '../resident.repository';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ApartmentRepository } from "src/modules/apartments/apartment.repository";
+import { ChangeResidentCashDto } from "../dto/change-resident-cash.dto";
+import { ResidentCashEntity } from "../entities/resident-cash.entity";
+import { ResidentEntity } from "../entities/resident.entity";
+import { ResidentCashRepository } from "../resident-cash.repository";
+import { ResidentRepository } from "../resident.repository";
 
 @Injectable()
 export class ResidentCashService {
   constructor(
     private readonly residentRepository: ResidentRepository,
-    private readonly apartmentRepository: ApartmentRepository,
-    private readonly residentCashRepository: ResidentCashRepository,
+    private readonly residentCashRepository: ResidentCashRepository
   ) {}
 
   async getAtualCashByApartment(
-    apartmentId: number,
-  ): Promise<ResidentCashEntity[]> {
+    apartmentId: number
+  ): Promise<ResidentCashEntity> {
     return new Promise(async (resolve, reject) => {
       try {
         const atualCash =
           await this.residentCashRepository.getAtualCashByApartment(
-            apartmentId,
+            apartmentId
           );
         resolve(atualCash);
       } catch (error) {
@@ -30,27 +29,37 @@ export class ResidentCashService {
     });
   }
 
-  async changeCash(data: ChangeResidentCashDto, req: any) {
-    const resident = await this.residentRepository.getById(data.residentId);
+  async changeCash(
+    data: ChangeResidentCashDto,
+    req: any
+  ): Promise<ResidentCashEntity> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const resident = await this.residentRepository.getById(+data.residentId);
 
-    if (!resident) {
-      throw new NotFoundException({
-        statusCode: 404,
-        message: 'Resident was not found',
-      });
-    }
+        if (!resident) {
+          throw new NotFoundException({
+            statusCode: 404,
+            message: "Resident was not found",
+          });
+        }
 
-    const newCash = new ResidentCashEntity();
-    newCash.user = req.user;
-    newCash.apartment = resident.apartment;
-    newCash.resident = resident;
-    newCash.cash = data.cash;
+        const atualCash = await this.residentCashRepository.getAtualCashByApartment(+data.apartmentId);
 
-    const residentCashUpdated = await this.residentCashRepository.changeCash(
-      newCash,
-    );
+        const newCash = new ResidentCashEntity();
+        newCash.user = req.user;
+        newCash.apartment = resident.apartment;
+        newCash.resident = resident;
+        newCash.cash = (+data.cash) + (+atualCash.cash);
 
-    return residentCashUpdated;
+        const residentCashUpdated =
+          await this.residentCashRepository.changeCash(newCash);
+
+        resolve(residentCashUpdated);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   formatResidentResponse(resident: ResidentEntity): ResidentEntity {

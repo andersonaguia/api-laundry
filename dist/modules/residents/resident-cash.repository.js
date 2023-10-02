@@ -35,15 +35,15 @@ let ResidentCashRepository = class ResidentCashRepository extends typeorm_1.Repo
     async getAtualCashByApartment(apartment) {
         return new Promise(async (resolve, reject) => {
             try {
-                const items = await this.find({
+                const cash = await this.findOne({
                     where: {
                         apartment: (0, typeorm_1.Equal)(apartment),
                     },
                     order: {
-                        createdAt: 'DESC',
+                        createdAt: "DESC",
                     },
                 });
-                resolve(items);
+                resolve(cash);
             }
             catch (error) {
                 reject(error);

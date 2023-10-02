@@ -15,6 +15,7 @@ export class ApartmentRepository extends Repository<ApartmentEntity> {
   }
 
   async getById(id: number): Promise<ApartmentEntity> {
+
     return await this.findOne({ where: { id } });
   }
 

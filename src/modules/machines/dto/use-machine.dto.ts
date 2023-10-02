@@ -10,5 +10,5 @@ export class UseMachineDto {
 
   @IsNotEmpty()
   @IsNumber()
-  readonly residentId: number;
+  readonly apartmentId: number;
 }
