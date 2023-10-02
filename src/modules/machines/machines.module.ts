@@ -6,6 +6,8 @@ import { MachineRepository } from './machine.repository';
 import { MachineService } from './services/machine.service';
 import { ResidentRepository } from '../residents/resident.repository';
 import { ResidentCashRepository } from '../residents/resident-cash.repository';
+import { ConfigurationRepository } from '../configuration/configuration.repository';
+import { UserRepository } from '../users/user.repository';
 
 @Module({
   imports: [],
@@ -17,6 +19,8 @@ import { ResidentCashRepository } from '../residents/resident-cash.repository';
     MachineHistoryRepository,
     ResidentRepository,
     ResidentCashRepository,
+    ConfigurationRepository,
+    UserRepository,
   ],
 })
 export class MachinesModule {}

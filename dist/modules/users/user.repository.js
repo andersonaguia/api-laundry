@@ -28,6 +28,21 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
             where: { email: email },
         });
     }
+    async findUserByName(username) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await this.findOne({
+                    where: {
+                        fullName: (0, typeorm_1.Like)(`%${username}%`),
+                    },
+                });
+                resolve(user);
+            }
+            catch (error) {
+                reject(error);
+            }
+        });
+    }
     async createUser(newUser) {
         return new Promise(async (resolve, reject) => {
             try {

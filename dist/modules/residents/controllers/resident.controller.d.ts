@@ -12,5 +12,5 @@ export declare class ResidentController {
     create(residentData: CreateResidentDto): Promise<ResidentEntity>;
     remove(id: number): Promise<string>;
     changeCash(data: ChangeResidentCashDto, req: any): Promise<ResidentCashEntity>;
-    getAtualCashByApartment(id: number): Promise<ResidentCashEntity[]>;
+    getAtualCashByApartment(id: number): Promise<ResidentCashEntity>;
 }

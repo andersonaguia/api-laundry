@@ -22,12 +22,36 @@ let ResidentRepository = class ResidentRepository extends typeorm_1.Repository {
         super(resident_entity_1.ResidentEntity, dataSource.createEntityManager());
     }
     async getById(id) {
-        return await this.findOne({ where: { id }, loadRelationIds: true });
+        return new Promise(async (resolve, reject) => {
+            try {
+                const resident = await this.findOne({ where: { id }, loadRelationIds: true });
+                resolve(resident);
+            }
+            catch (error) {
+                reject(error);
+            }
+        });
     }
     async getAll() {
         return await this.find({
             where: { deletedAt: null },
             relations: { apartment: true },
+        });
+    }
+    async getByApartmentId(apartmentId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const resident = await this.findOne({
+                    where: {
+                        apartment: (0, typeorm_1.Equal)(apartmentId),
+                    },
+                });
+                console.log("RESIDENT: ", resident);
+                resolve(resident);
+            }
+            catch (error) {
+                reject(error);
+            }
         });
     }
     async createResident(newResident) {
@@ -51,7 +75,7 @@ let ResidentRepository = class ResidentRepository extends typeorm_1.Repository {
                 console.log(residentDeleted);
                 if (residentDeleted) {
                     console.log(residentDeleted);
-                    resolve({ code: 200, message: 'Removido com sucesso' });
+                    resolve({ code: 200, message: "Removido com sucesso" });
                 }
             }
             catch (error) {
@@ -64,7 +88,7 @@ let ResidentRepository = class ResidentRepository extends typeorm_1.Repository {
             try {
                 const { affected } = await this.update({ id }, resident);
                 if (affected > 0) {
-                    resolve('Dados atualizados com sucesso');
+                    resolve("Dados atualizados com sucesso");
                 }
             }
             catch (error) {

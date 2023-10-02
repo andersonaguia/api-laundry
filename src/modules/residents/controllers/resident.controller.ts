@@ -64,7 +64,7 @@ export class ResidentController {
   @Get('/atualcash/:id')
   async getAtualCashByApartment(
     @Param('id') id: number,
-  ): Promise<ResidentCashEntity[]> {
+  ): Promise<ResidentCashEntity> {
     return await this.residentCashService.getAtualCashByApartment(+id);
   }
 }

@@ -15,6 +15,8 @@ const machine_repository_1 = require("./machine.repository");
 const machine_service_1 = require("./services/machine.service");
 const resident_repository_1 = require("../residents/resident.repository");
 const resident_cash_repository_1 = require("../residents/resident-cash.repository");
+const configuration_repository_1 = require("../configuration/configuration.repository");
+const user_repository_1 = require("../users/user.repository");
 let MachinesModule = class MachinesModule {
 };
 MachinesModule = __decorate([
@@ -28,6 +30,8 @@ MachinesModule = __decorate([
             machine_history_repository_1.MachineHistoryRepository,
             resident_repository_1.ResidentRepository,
             resident_cash_repository_1.ResidentCashRepository,
+            configuration_repository_1.ConfigurationRepository,
+            user_repository_1.UserRepository,
         ],
     })
 ], MachinesModule);

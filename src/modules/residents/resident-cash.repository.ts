@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, Equal, Repository } from 'typeorm';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { ResidentCashEntity } from './entities/resident-cash.entity';
+import { Injectable } from "@nestjs/common";
+import { DataSource, Equal, Repository } from "typeorm";
+import { InjectDataSource } from "@nestjs/typeorm";
+import { ResidentCashEntity } from "./entities/resident-cash.entity";
 
 @Injectable()
 export class ResidentCashRepository extends Repository<ResidentCashEntity> {
@@ -21,19 +21,19 @@ export class ResidentCashRepository extends Repository<ResidentCashEntity> {
   }
 
   async getAtualCashByApartment(
-    apartment: number,
-  ): Promise<ResidentCashEntity[]> {
+    apartment: number
+  ): Promise<ResidentCashEntity> {
     return new Promise(async (resolve, reject) => {
       try {
-        const items = await this.find({
+        const cash = await this.findOne({
           where: {
             apartment: Equal(apartment),
           },
           order: {
-            createdAt: 'DESC',
+            createdAt: "DESC",
           },
         });
-        resolve(items);
+        resolve(cash);
       } catch (error) {
         reject(error);
       }
