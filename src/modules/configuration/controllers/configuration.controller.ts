@@ -22,7 +22,7 @@ export class ConfigurationController {
   @Roles(UserRole.MANAGER)
   @Roles(UserRole.SUPERVISOR)
   @Get('/actual')
-  async findActualConfiguration(): Promise<ConfigurationEntity[]> {
+  async findActualConfiguration(): Promise<ConfigurationEntity> {
     return await this.configurationService.findActualConfiguration();
   }
   
