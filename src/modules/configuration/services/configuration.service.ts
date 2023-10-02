@@ -42,7 +42,7 @@ export class ConfigurationService {
     });
   }
 
-  async findActualConfiguration(): Promise<ConfigurationEntity[]> {
+  async findActualConfiguration(): Promise<ConfigurationEntity> {
     return new Promise(async (resolve, reject) => {
       try {
         const actualConfiguration =
