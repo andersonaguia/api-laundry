@@ -15,7 +15,7 @@ import { UseMachineDto } from '../dto/use-machine.dto';
 import { MachineEntity } from '../entities/machine.entity';
 import { MachineService } from '../services/machine.service';
 import { UserRole } from 'src/modules/users/enum/user.role';
-import { MachineHistoryEntity } from '../entities/machine-history.entity';
+import { ResponseDto } from 'src/common/responseDto';
 
 @Controller('machines')
 export class MachinesController {
@@ -27,12 +27,12 @@ export class MachinesController {
   }
 
   @Post('/create')
-  async create(@Body() machineData: CreateMachineDto): Promise<MachineEntity> {
+  async create(@Body() machineData: CreateMachineDto): Promise<ResponseDto> {
     return await this.machineService.create(machineData);
   }
 
   @Patch('/updatestatus')
-  async updateStatus(@Body() machineData: UpdateMachineDto): Promise<object> {
+  async updateStatus(@Body() machineData: UpdateMachineDto): Promise<ResponseDto> {
     return await this.machineService.updateStatus(machineData);
   }
 
@@ -44,7 +44,7 @@ export class MachinesController {
   async useMachine(
     @Body() useData: UseMachineDto,
     @Request() req: any,
-  ): Promise<MachineHistoryEntity> {
+  ): Promise<ResponseDto> {
     return await this.machineService.useMachine(useData, req);
   }
 }

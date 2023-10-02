@@ -45,7 +45,7 @@ export class MachineRepository extends Repository<MachineEntity> {
     });
   }
 
-  async updateMachine(machineData: UpdateMachineDto): Promise<object> {
+  async updateCommandMachine(machineData: UpdateMachineDto): Promise<object> {
     const { machineId, isOn } = machineData;
 
     const dataToUpdate = {
